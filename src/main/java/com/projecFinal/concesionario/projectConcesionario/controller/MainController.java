@@ -1,13 +1,7 @@
 package com.projecFinal.concesionario.projectConcesionario.controller;
 
-import com.projecFinal.concesionario.projectConcesionario.modelo.Cliente;
-import com.projecFinal.concesionario.projectConcesionario.modelo.Supervisor;
-import com.projecFinal.concesionario.projectConcesionario.modelo.Vehiculo;
-import com.projecFinal.concesionario.projectConcesionario.modelo.Vendedor;
-import com.projecFinal.concesionario.projectConcesionario.repository.ClienteRepository;
-import com.projecFinal.concesionario.projectConcesionario.repository.SupervisorRepository;
-import com.projecFinal.concesionario.projectConcesionario.repository.VehiculoRepository;
-import com.projecFinal.concesionario.projectConcesionario.repository.VendedorRepository;
+import com.projecFinal.concesionario.projectConcesionario.modelo.*;
+import com.projecFinal.concesionario.projectConcesionario.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +22,9 @@ public class MainController {
 
     @Autowired
     private VehiculoRepository vehiculoRepository;
+
+    @Autowired
+    private DocumentacionRepository documentacionRepository;
 
     //===================================================
 
@@ -87,6 +84,20 @@ public class MainController {
         return vehiculoRepository.findById(id_vehiculo);
     }
 
+    @GetMapping(path = "/documentacion/all")
+    public @ResponseBody
+    Iterable<Documentacion> getAlDocumentacion(){
+
+        return documentacionRepository.findAll();
+    }
+
+    @GetMapping(path = "/documentacion/{id_documentacion}")
+    public @ResponseBody
+    Optional<Documentacion> getDocumentacionById(@PathVariable("id_documentacion") int id_documentacion){
+
+        return documentacionRepository.findById(id_documentacion);
+    }
+
     //===================================================
 
     @PostMapping(path = "/cliente/create", consumes = "application/json", produces = "application/json")
@@ -109,7 +120,10 @@ public class MainController {
         return vehiculoRepository.save(newVehiculo);
     }
 
-
+    @PostMapping(path = "/documentacion/create", consumes = "application/json", produces = "application/json")
+    public Documentacion createDocumentacion(@RequestBody Documentacion newDocumentacion) {
+        return documentacionRepository.save(newDocumentacion);
+    }
     //===================================================
 
     @PutMapping(path = "/cliente/apdate")
@@ -132,7 +146,10 @@ public class MainController {
         return vehiculoRepository.save(apdateVehiculo);
     }
 
-
+    @PutMapping(path = "/documentacion/apdate")
+    public Documentacion apdateDocumentacion(@RequestBody Documentacion apdateDocumentacion) {
+        return documentacionRepository.save(apdateDocumentacion);
+    }
     //===================================================
 
     @DeleteMapping(path = "/cliente/delete/{id_cliente}")
@@ -163,4 +180,10 @@ public class MainController {
         return vehiculoRepository.findAll();
     }
 
+    @DeleteMapping(path = "/documentacion/delete/{id_documentacion}")
+    public @ResponseBody
+    Iterable<Documentacion> deleteDocumentacionById(@PathVariable("id_documentacion") int id_documentacion) {
+        documentacionRepository.deleteById(id_documentacion);
+        return documentacionRepository.findAll();
+    }
 }
